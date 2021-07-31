@@ -9,10 +9,10 @@
     <div class="container-fluid bg-dark">
       <div class="row">
         <div class="col-lg-8 col-md-10 header mx-auto">
-          <form action="" class="mainForm">
-            <div class="row">
-              <div class="col">
-                <h1>RSS агрегатор</h1>
+          <div class="row">
+            <div class="col">
+              <h1>RSS агрегатор</h1>
+              <form action="" class="mainForm">
                 <div class="mb-3">
                   <label for="RSSInput" class="form-label"
                     >Начните читать RSS сегодня! Это легко, это красиво.</label
@@ -20,14 +20,19 @@
                   <div class="row">
                     <div class="col">
                       <input
-                        type="email"
+                        name="url"
+                        type="text"
                         class="form-control"
                         id="RSSInput"
                         aria-describedby="requestHelp"
                       />
                     </div>
                     <div class="col">
-                      <button type="submit" class="btn btn-primary">
+                      <button
+                        name="button"
+                        type="submit"
+                        class="btn btn-primary"
+                      >
                         Submit
                       </button>
                     </div>
@@ -36,9 +41,9 @@
                     Пример: https://ru.hexlet.io/lessons.rss
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
