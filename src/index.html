@@ -1,51 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Webpack App!</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    <div class="container-fluid bg-dark">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 header mx-auto">
-          <div class="row">
-            <div class="col">
-              <h1>RSS агрегатор</h1>
-              <form action="" class="mainForm">
-                <div class="mb-3">
-                  <label for="RSSInput" class="form-label"
-                    >Начните читать RSS сегодня! Это легко, это красиво.</label
-                  >
-                  <div class="row">
-                    <div class="col">
-                      <input
-                        name="url"
-                        type="text"
-                        class="form-control"
-                        id="RSSInput"
-                        aria-describedby="requestHelp"
-                      />
-                    </div>
-                    <div class="col">
-                      <button
-                        name="button"
-                        type="submit"
-                        class="btn btn-primary"
-                      >
-                        Submit
-                      </button>
-                    </div>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Webpack App!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <div class="container-fluid bg-dark">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 header mx-auto">
+        <div class="row">
+          <div class="col">
+            <h1>RSS агрегатор</h1>
+            <form action="" class="mainForm">
+              <div class="mb-3">
+                <label for="RSSInput" class="form-label">Начните читать RSS сегодня! Это легко, это красиво.</label>
+                <div class="row">
+                  <div class="col">
+                    <input name="url" type="text" class="form-control" id="RSSInput" aria-describedby="requestHelp" />
                   </div>
-                  <div id="requestHelp" class="form-text">
-                    Пример: https://ru.hexlet.io/lessons.rss
+                  <div class="col">
+                    <button name="button" type="submit" class="btn btn-primary">
+                      Submit
+                    </button>
                   </div>
                 </div>
-              </form>
-            </div>
+                <div id="requestHelp" class="form-text">
+                  Пример: https://ru.hexlet.io/lessons.rss
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
