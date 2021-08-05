@@ -1,10 +1,11 @@
 import 'bootstrap';
 import './scss/styles.scss';
-import onChange from 'on-change';
 import * as yup from 'yup';
 
+import watcher from './view.js';
+
 const schema = yup.string().required().url();
-const input = document.querySelector('input');
+
 const engine = () => {
   const state = {
     queryForm: {
@@ -13,47 +14,30 @@ const engine = () => {
     },
     errors: [],
   };
-  const watchedState = onChange(state, (path, value) => {
-    if (path === 'queryForm.data') {
-      // console.log(schema.validateSync(value[value.length - 1]));
-    }
-    if (path === 'queryForm.state') {
-      switch (value) {
-        case 'valid':
-          console.log('valid');
-          if (input.classList.contains('is-invalid'))
-            input.classList.remove('is-invalid');
-          break;
-        case 'invalid':
-          console.log('invalid');
 
-          input.classList.add('is-invalid');
-          break;
-        default:
-          throw new Error('Unknown queryForm state');
-      }
-    }
-  });
   const form = document.querySelector('form');
-  const queryField = form.elements.url;
+  const input = document.querySelector('input[name=url]');
+
+  const watchedState = watcher(state, { input, form });
   form.addEventListener('submit', (e) => {
+    watchedState.errors = [];
     e.preventDefault();
-    const validation = schema
-      .validate(queryField.value)
+    schema
+      .validate(input.value)
       .then((value) => {
-        watchedState.queryForm.state = 'valid';
+        if (watchedState.queryForm.data.indexOf(value) !== -1) {
+          watchedState.queryForm.state = 'invalid';
+          watchedState.errors.push('RSS уже существует');
+        } else {
+          watchedState.queryForm.data.push(value);
+          watchedState.queryForm.state = 'valid';
+        }
+        console.log('watchedState', watchedState);
       })
-      .catch((e) => console.log(e));
-    if (validation === queryField.value) {
-      watchedState.queryForm.state = 'valid';
-    } else {
-      watchedState.queryForm.state = 'invalid';
-    }
-    watchedState.queryForm.data.push(form.elements.url.value);
-    console.log(watchedState.queryForm.state);
+      .catch((err) => {
+        watchedState.errors.push(err.errors);
+        watchedState.queryForm.state = 'invalid';
+      });
   });
-  // queryField.addEventListener('input', () => {
-  //   watchedState.queryForm.state = 'filling';
-  // });
 };
 engine();
