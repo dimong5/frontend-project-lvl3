@@ -3,6 +3,7 @@ import onChange from 'on-change';
 export default (state, elements) => {
   const { input } = elements;
   const { form } = elements;
+  const { feedback } = elements;
 
   return onChange(state, (path, value) => {
     if (path === 'queryForm.state') {
@@ -20,6 +21,14 @@ export default (state, elements) => {
         default:
           throw new Error('Unknown queryForm state');
       }
+    }
+    if (path === 'errors') {
+      feedback.textContent = '';
+      const content = state.errors.reduce((acc, error) => {
+        if (acc === '') return error;
+        return `${acc}\n${error}`;
+      }, '');
+      feedback.textContent = content;
     }
   });
 };
