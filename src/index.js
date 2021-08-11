@@ -4,8 +4,10 @@ import { setLocale } from 'yup';
 import * as yup from 'yup';
 
 import i18next from 'i18next';
+import axios from 'axios';
 import watcher from './view.js';
 import resources from './locales';
+import parseRSS from './parseRSS.js';
 
 i18next.init({
   lng: 'ru',
@@ -25,6 +27,7 @@ const schema = yup.string().required().url();
 
 const engine = () => {
   const state = {
+    parsedData: '',
     queryForm: {
       state: 'valid',
       data: [],
@@ -35,7 +38,7 @@ const engine = () => {
   const form = document.querySelector('form');
   const input = document.querySelector('input[name=url]');
   const feedback = document.querySelector('p.feedback');
-  console.log(feedback);
+  // console.log(feedback);
 
   const watchedState = watcher(state, { input, form, feedback });
   form.addEventListener('submit', (e) => {
@@ -56,6 +59,16 @@ const engine = () => {
         watchedState.errors.push(...err.errors);
         watchedState.queryForm.state = 'invalid';
       });
+    console.log(input.value);
+    axios
+      .get(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(input.value)}`
+      )
+      .then((response) => {
+        console.log(response.data.contents);
+        watchedState.parsedData = parseRSS(response.data.contents);
+      })
+      .catch((error) => console.log(error));
   });
 };
 engine();

@@ -1,4 +1,5 @@
 import onChange from 'on-change';
+import render from './renderData';
 
 export default (state, elements) => {
   const { input } = elements;
@@ -29,6 +30,9 @@ export default (state, elements) => {
         return `${acc}\n${error}`;
       }, '');
       feedback.textContent = content;
+    }
+    if (path === 'parsedData') {
+      render(value);
     }
   });
 };
