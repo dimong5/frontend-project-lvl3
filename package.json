@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/dimong5/frontend-project-lvl3#readme",
   "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/eslint-parser": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@popperjs/core": "^2.9.2",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "css-loader": "^6.2.0",
@@ -26,6 +30,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-prettier": "^3.4.0",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.0.6",
     "postcss-loader": "^6.1.1",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.3.2",
@@ -35,10 +40,10 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
-    "@popperjs/core": "^2.9.2",
     "allorigins": "^2.0.2",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",
+    "babel-jest": "^27.0.6",
     "bootstrap": "^5.0.2",
     "i18next": "^20.3.5",
     "lodash": "^4.17.21",

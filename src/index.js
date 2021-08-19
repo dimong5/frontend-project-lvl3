@@ -28,47 +28,63 @@ const schema = yup.string().required().url();
 const engine = () => {
   const state = {
     parsedData: '',
+    responseData: '',
+    responseState: '',
     queryForm: {
       state: 'valid',
       data: [],
     },
-    errors: [],
+    errors: '',
   };
 
   const form = document.querySelector('form');
-  const input = document.querySelector('input[name=url]');
   const feedback = document.querySelector('p.feedback');
-  // console.log(feedback);
+  const input = document.querySelector('input[name=url]');
 
   const watchedState = watcher(state, { input, form, feedback });
   form.addEventListener('submit', (e) => {
-    watchedState.errors = [];
+    watchedState.errors = '';
     e.preventDefault();
     schema
       .validate(input.value)
       .then((value) => {
+        const indexURL = watchedState.queryForm.data.indexOf(value);
         if (watchedState.queryForm.data.indexOf(value) !== -1) {
-          watchedState.errors.push(i18next.t('errors.alreadyExist'));
+          watchedState.errors = i18next.t('errors.alreadyExist');
           watchedState.queryForm.state = 'invalid';
         } else {
           watchedState.queryForm.data.push(value);
           watchedState.queryForm.state = 'valid';
+          axios
+            .get(
+              `https://api.allorigins.win/get?disableCache=true&url=${encodeURIComponent(
+                value
+              )}`
+            )
+            .then((response) => {
+              const data = parseRSS(response.data.contents);
+              if (data) {
+                watchedState.responseState = 'valid';
+                watchedState.parsedData = parseRSS(response.data.contents);
+              } else {
+                console.log(indexURL);
+                watchedState.queryForm.data.splice(indexURL, 1);
+                watchedState.responseState = 'parserError';
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              watchedState.queryForm.data.splice(indexURL, 1);
+              watchedState.responseState = 'invalid';
+            });
         }
       })
       .catch((err) => {
-        watchedState.errors.push(...err.errors);
+        watchedState.errors = err.errors;
         watchedState.queryForm.state = 'invalid';
       });
-    console.log(input.value);
-    axios
-      .get(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(input.value)}`
-      )
-      .then((response) => {
-        console.log(response.data.contents);
-        watchedState.parsedData = parseRSS(response.data.contents);
-      })
-      .catch((error) => console.log(error));
+    console.log(watchedState);
+    watchedState.responseState = 'initial';
   });
 };
 engine();
