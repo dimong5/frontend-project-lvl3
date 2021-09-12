@@ -11,3 +11,5 @@ build:
 		npx webpack --mode=production
 dev:
 		npx webpack --mode=development
+develop:
+		npx webpack serve --mode development --env development

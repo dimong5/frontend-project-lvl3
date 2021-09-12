@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import 'bootstrap';
 import './scss/styles.scss';
 import { setLocale } from 'yup';
@@ -5,9 +6,11 @@ import * as yup from 'yup';
 
 import i18next from 'i18next';
 import axios from 'axios';
+import onChange from 'on-change';
 import watcher from './view.js';
 import resources from './locales';
 import parseRSS from './parseRSS.js';
+import update from './update.js';
 
 i18next.init({
   lng: 'ru',
@@ -25,66 +28,95 @@ setLocale({
 
 const schema = yup.string().required().url();
 
-const engine = () => {
+const form = document.querySelector('form');
+const input = document.querySelector('input[name=url]');
+
+const init = () => {
   const state = {
-    parsedData: '',
-    responseData: '',
-    responseState: '',
-    queryForm: {
-      state: 'valid',
-      data: [],
+    form: {
+      state: '',
+      error: null,
     },
-    errors: '',
+    data: {
+      links: [],
+      posts: [],
+      feed: [],
+      postCount: 0,
+      feedCount: 0,
+    },
+    network: {
+      state: '',
+      error: null,
+    },
   };
 
-  const form = document.querySelector('form');
-  const feedback = document.querySelector('p.feedback');
-  const input = document.querySelector('input[name=url]');
+  const watchedState = onChange(state, (...params) => {
+    watcher(watchedState, ...params);
+  });
 
-  const watchedState = watcher(state, { input, form, feedback });
+  update(watchedState);
+
   form.addEventListener('submit', (e) => {
-    watchedState.errors = '';
     e.preventDefault();
+    console.log(form);
     schema
       .validate(input.value)
       .then((value) => {
-        const indexURL = watchedState.queryForm.data.indexOf(value);
-        if (watchedState.queryForm.data.indexOf(value) !== -1) {
-          watchedState.errors = i18next.t('errors.alreadyExist');
-          watchedState.queryForm.state = 'invalid';
+        watchedState.form.state = 'init';
+        if (watchedState.data.links.findIndex((l) => l === value) !== -1) {
+          watchedState.form.error = 'alreadyExist';
+          watchedState.form.state = 'invalid';
         } else {
-          watchedState.queryForm.data.push(value);
-          watchedState.queryForm.state = 'valid';
+          watchedState.data.links.push(value);
+          watchedState.form.state = 'valid';
+          watchedState.form.error = null;
+        }
+        return value;
+      })
+      .then((value) => {
+        if (watchedState.form.state === 'valid') {
+          watchedState.network.state = 'loading';
           axios
             .get(
-              `https://api.allorigins.win/get?disableCache=true&url=${encodeURIComponent(
+              `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
                 value
               )}`
             )
             .then((response) => {
-              const data = parseRSS(response.data.contents);
-              if (data) {
-                watchedState.responseState = 'valid';
-                watchedState.parsedData = parseRSS(response.data.contents);
+              // console.log(parseRSS(response.data.contents));
+              const parsedData = parseRSS(response.data.contents);
+              if (parsedData) {
+                parsedData.posts.forEach((post) => {
+                  post.id = watchedState.data.postCount;
+                  post.feedId = parsedData.feed.feedLink;
+                  watchedState.data.postCount += 1;
+                });
+                console.log(parsedData.posts);
+                parsedData.feed.id = watchedState.data.feedCount;
+                watchedState.data.feedCount += 1;
+                watchedState.data.posts = [
+                  ...watchedState.data.posts,
+                  ...parsedData.posts,
+                ];
+                watchedState.data.feed = parsedData.feed;
+                watchedState.network.state = 'success';
+                watchedState.network.state = 'init';
               } else {
-                console.log(indexURL);
-                watchedState.queryForm.data.splice(indexURL, 1);
-                watchedState.responseState = 'parserError';
+                watchedState.network.state = 'parserError';
               }
             })
-            .catch((error) => {
-              console.log(error);
-              watchedState.queryForm.data.splice(indexURL, 1);
-              watchedState.responseState = 'invalid';
+            .catch((er) => {
+              console.log('network error', er);
+              watchedState.network.state = 'failed';
             });
         }
       })
       .catch((err) => {
-        watchedState.errors = err.errors;
-        watchedState.queryForm.state = 'invalid';
+        watchedState.form.state = 'init';
+        watchedState.form.error = err.errors;
+        console.log('error', watchedState.form.error);
+        watchedState.form.state = 'invalid';
       });
-    console.log(watchedState);
-    watchedState.responseState = 'initial';
   });
 };
-engine();
+init();
