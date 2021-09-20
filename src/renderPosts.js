@@ -1,6 +1,8 @@
-const handlePostsChange = (posts) => {
+const renderPosts = (watchedState) => {
+  const state = watchedState;
+  const { posts } = state.data;
+  const { hasBeenRead } = state.data;
   const postsWrapper = document.querySelector('.posts');
-  // const { posts } = state.data;
   const templatePosts = `<div class="card border-0">
   <div class="card-body"><h2 class="card-title h4">Посты</h2></div>
     <ul class="list-group border-0 rounded-0">
@@ -12,11 +14,16 @@ const handlePostsChange = (posts) => {
   const ulPosts = document.querySelector('.posts ul');
 
   posts.forEach((post) => {
-    // postCount += 1;
+    let font;
+    if (hasBeenRead.indexOf(String(post.id)) !== -1) {
+      font = 'fw-normal';
+    } else {
+      font = 'fw-bold';
+    }
     const postString = `
   <li class="list-group-item d-flex justify-content-between 
     align-items-start border-0 border-end-0">
-  <a href="${post.link}" class="fw-bold" data-id="${post.id}" target="_blank"
+  <a href="${post.link}" class="${font}" data-id="${post.id}" target="_blank"
     rel="noopener noreferrer">
     ${post.title}
   </a>
@@ -27,5 +34,19 @@ const handlePostsChange = (posts) => {
 </li>`;
     ulPosts.innerHTML = postString + ulPosts.innerHTML;
   });
+  const postsDOM = document.querySelectorAll('.posts li');
+  postsDOM.forEach((post) => {
+    const button = post.querySelector('button');
+
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const a = e.target.parentNode.querySelector('a');
+      const postId = a.dataset.id;
+      state.data.modalId = postId;
+      if (state.data.hasBeenRead.indexOf(postId) === -1) {
+        state.data.hasBeenRead.push(postId);
+      }
+    });
+  });
 };
-export default handlePostsChange;
+export default renderPosts;

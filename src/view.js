@@ -1,7 +1,7 @@
 import i18next from 'i18next';
-import _ from 'lodash';
 import renderPosts from './renderPosts';
 import renderFeed from './renderFeed';
+import renderModal from './renderModal';
 
 export default (state, ...params) => {
   const form = document.querySelector('form');
@@ -57,21 +57,21 @@ export default (state, ...params) => {
 
   const path = params[0];
   const value = params[1];
-  const previousValue = params[2];
   if (path === 'form.state') handleFormState(value);
   if (path === 'data.posts') {
-    const feedId = value[value.length - 1].feedLink;
-    const previousValueFiltered = previousValue.filter(
-      ({ feedLink }) => feedLink === feedId
-    );
-    const valueFiltered = value.filter(({ feedLink }) => feedLink === feedId);
-    const diff = _.differenceBy(valueFiltered, previousValueFiltered, 'title');
-    renderPosts(diff);
+    document.querySelector('.posts').innerHTML = '';
+    renderPosts(state);
   }
   if (path === 'data.feed') {
     renderFeed(state);
   }
   if (path === 'network.state') {
     handleNetworkState(value);
+  }
+  if (path === 'data.hasBeenRead') {
+    renderPosts(state);
+  }
+  if (path === 'data.modalId') {
+    renderModal(state, value);
   }
 };

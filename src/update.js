@@ -29,7 +29,14 @@ const update = (watchedState) => {
           return acc;
         }, []);
         if (diff.length !== 0) {
-          watchedState.data.posts.push(...diff);
+          let counter = watchedState.data.posts.length + 1;
+          const diffIdAdded = diff.map((post) => {
+            const postWithId = post;
+            postWithId.id = counter;
+            counter += 1;
+            return postWithId;
+          });
+          watchedState.data.posts.push(...diffIdAdded);
         }
       });
     });

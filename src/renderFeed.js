@@ -18,12 +18,12 @@ const render = (state) => {
   }
 
   const ulFeeds = document.querySelector('.feeds ul');
-
-  ulFeeds.innerHTML += `<li class="list-group-item border-0 border-end-0">
-  <h3 class="h6 m-0">${feed.feedTitle}</h3>
-    <p class="m-0 small text-black-50">
-      ${feed.feedDescription}
-    </p>
-</li>`;
+  const feedString = `<li class="list-group-item border-0 border-end-0">
+    <h3 class="h6 m-0">${feed.feedTitle}</h3>
+      <p class="m-0 small text-black-50">
+        ${feed.feedDescription}
+      </p>
+    </li>`;
+  ulFeeds.innerHTML = feedString + ulFeeds.innerHTML;
 };
 export default render;

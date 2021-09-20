@@ -1,9 +1,7 @@
-/* eslint-disable no-param-reassign */
 import 'bootstrap';
 import './scss/styles.scss';
 import { setLocale } from 'yup';
 import * as yup from 'yup';
-
 import i18next from 'i18next';
 import axios from 'axios';
 import onChange from 'on-change';
@@ -41,8 +39,9 @@ const init = () => {
       links: [],
       posts: [],
       feed: [],
-      postCount: 0,
+      hasBeenRead: [],
       feedCount: 0,
+      modalId: '',
     },
     network: {
       state: '',
@@ -83,21 +82,21 @@ const init = () => {
               )}`
             )
             .then((response) => {
-              // console.log(parseRSS(response.data.contents));
               const parsedData = parseRSS(response.data.contents);
               if (parsedData) {
-                parsedData.posts.forEach((post) => {
-                  post.id = watchedState.data.postCount;
-                  post.feedId = parsedData.feed.feedLink;
-                  watchedState.data.postCount += 1;
+                let counter = watchedState.data.posts.length + 1;
+                const parsedPostsIdAdded = parsedData.posts.map((post) => {
+                  const result = post;
+                  result.id = counter;
+                  counter += 1;
+                  return result;
                 });
-                console.log(parsedData.posts);
-                parsedData.feed.id = watchedState.data.feedCount;
                 watchedState.data.feedCount += 1;
-                watchedState.data.posts = [
+                const postsArray = [
                   ...watchedState.data.posts,
-                  ...parsedData.posts,
+                  ...parsedPostsIdAdded,
                 ];
+                watchedState.data.posts = postsArray;
                 watchedState.data.feed = parsedData.feed;
                 watchedState.network.state = 'success';
                 watchedState.network.state = 'init';
