@@ -69,6 +69,8 @@ export default (state, ...params) => {
     handleNetworkState(value);
   }
   if (path === 'data.hasBeenRead') {
+    const posts = document.querySelector('.posts');
+    posts.innerHTML = '';
     renderPosts(state);
   }
   if (path === 'data.modalId') {
