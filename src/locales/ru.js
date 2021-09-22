@@ -5,9 +5,9 @@ export default {
       notValidURL: 'Ссылка должна быть валидным URL',
       alreadyExist: 'RSS уже существует',
       RSSNotFound: 'Ресурс не содержит валидный RSS',
-      emptyField: 'Это поле не должно быть пустым',
+      emptyField: 'Не должно быть пустым',
       parserError: 'Возникла ошибка парсинга',
-      loadError: 'Возникла ошибка загрузки',
+      loadError: 'Ошибка сети',
     },
   },
 };
