@@ -12,6 +12,7 @@ module.exports = {
       template: './index.html',
     }),
   ],
+  mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
       {
