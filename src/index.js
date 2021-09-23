@@ -1,3 +1,4 @@
 import runApp from './init.js';
 
-runApp();
+Promise.resolve(runApp());
+// runApp();
