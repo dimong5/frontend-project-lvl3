@@ -7,93 +7,88 @@
   </head>
 
   <body>
-    
-    
     <div
-  class="modal fade"
-  id="modal"
-  tabindex="-1"
-  aria-labelledby="modal"
-  style="display: none"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Паттерны (продолжение) / Java: ООП</h5>
-        <button
-          type="button"
-          class="btn-close close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">Цель: Продолжить знакомство с паттернами</div>
-      <div class="modal-footer">
-        <a
-          class="btn btn-primary full-article"
-          href="https://ru.hexlet.io/courses/java-oop/lessons/patterns-continuation/theory_unit"
-          role="button"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Читать полностью </a
-        ><button
-          type="button"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
-          Закрыть
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-    <section class="container-fluid bg-dark">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 header mx-auto">
-          <div class="row">
-            <div class="col">
-              <h1>RSS агрегатор</h1>
-              <form action="" class="mainForm">
-                <div class="mb-3">
-                  <label for="RSSInput" class="form-label"
-                    >Начните читать RSS сегодня! Это легко, это красиво.</label
-                  >
-                  <div class="row">
-                    <div class="col">
-                      <input
-                        name="url"
-                        type="text"
-                        class="form-control"
-                        id="RSSInput"
-                        aria-describedby="requestHelp"
-                      />
-                    </div>
-                    <div class="col">
-                      <button
-                        name="button"
-                        type="submit"
-                        class="btn btn-primary"
-                      >
-                        Добавить
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <div id="requestHelp" class="form-text">
-                <p class="text-muted mt-2 mb-0">
-                  Пример: https://ru.hexlet.io/lessons.rss<br>
-                  https://www.posttoday.com/rss/src/world.xml<br>
-                  http://lorem-rss.herokuapp.com/feed?unit=second&interval=5
-                </p>
-                <p class="feedback text-danger position-absolute"></p>
-              </div>
-            </div>
+      class="modal fade"
+      id="modal"
+      tabindex="-1"
+      aria-labelledby="modal"
+      style="display: none"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Паттерны (продолжение) / Java: ООП</h5>
+            <button
+              type="button"
+              class="btn-close close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Цель: Продолжить знакомство с паттернами</div>
+          <div class="modal-footer">
+            <a
+              class="btn btn-primary full-article"
+              href="https://ru.hexlet.io/courses/java-oop/lessons/patterns-continuation/theory_unit"
+              role="button"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Читать полностью </a
+            ><button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Закрыть
+            </button>
           </div>
         </div>
       </div>
+    </div>
+ 
+    <section class="container-fluid bg-dark p-5">
+      <div class="row">
+        <div class="col-md-10 col-lg-8 mx-auto text-white">
+          <h1 class="display-3 mb-0">RSS агрегатор</h1>
+          <p class="lead">
+            Начните читать RSS сегодня! Это легко, это красиво.
+          </p>
+          <form action="" class="rss-form text-body">
+            <div class="row">
+              <div class="col">
+                <div class="form-floating">
+                  <input
+                    id="url-input"
+                    autofocus=""
+                    name="url"
+                    aria-label="url"
+                    class="form-control w-100"
+                    placeholder="ссылка RSS"
+                    autocomplete="off"
+                  />
+                  <label for="url-input">Ссылка RSS</label>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button
+                  type="submit"
+                  aria-label="add"
+                  class="h-100 btn btn-lg btn-primary px-sm-5"
+                >
+                  Добавить
+                </button>
+              </div>
+            </div>
+          </form>
+          <p class="mt-2 mb-0 text-muted">
+            Пример: https://ru.hexlet.io/lessons.rss
+          </p>
+          <p class="feedback m-0 position-absolute small text-danger"></p>
+        </div>
+      </div>
     </section>
+
     <section class="container-fluid container-xxl p-5">
       <div class="row">
         <div class="col-md-10 col-lg-8 order-1 mx-auto posts"></div>
