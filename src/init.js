@@ -117,5 +117,4 @@ const init = () => {
       });
   });
 };
-const promise = new Promise((resolve) => resolve());
-export default promise.then(init);
+export default init;
