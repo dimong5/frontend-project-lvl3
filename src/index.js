@@ -10,26 +10,26 @@ import resources from './locales';
 import parseRSS from './parseRSS.js';
 import update from './update.js';
 
-i18next.init({
-  lng: 'ru',
-  resources,
-});
-
-setLocale({
-  mixed: {
-    required: i18next.t('errors.emptyField'),
-  },
-  string: {
-    url: i18next.t('errors.notValidURL'),
-  },
-});
-
-const schema = yup.string().required().url();
-
-const form = document.querySelector('form');
-const input = document.querySelector('input[name=url]');
-
 const init = () => {
+  i18next.init({
+    lng: 'ru',
+    resources,
+  });
+
+  setLocale({
+    mixed: {
+      required: i18next.t('errors.emptyField'),
+    },
+    string: {
+      url: i18next.t('errors.notValidURL'),
+    },
+  });
+
+  const schema = yup.string().required().url();
+
+  const form = document.querySelector('form');
+  const input = document.querySelector('input[name=url]');
+
   const state = {
     form: {
       state: '',
@@ -57,7 +57,6 @@ const init = () => {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log(form);
     schema
       .validate(input.value)
       .then((value) => {
