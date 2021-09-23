@@ -27,7 +27,7 @@ const init = () => {
 
   const schema = yup.string().required().url();
 
-  const form = document.querySelector('form');
+  const form = document.querySelector('.rss-form');
   const input = document.querySelector('input[name=url]');
 
   const state = {

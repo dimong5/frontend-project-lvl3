@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   devtool: 'inline-source-map',
@@ -12,7 +11,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
     }),
-    new CleanWebpackPlugin(),
   ],
   module: {
     rules: [
