@@ -1,4 +1,5 @@
 import runApp from './init.js';
 
-Promise.resolve(runApp());
+const promise = new Promise((resolve) => resolve());
+promise.then(() => runApp());
 // runApp();
