@@ -4,9 +4,8 @@ export default {
     errors: {
       notValidURL: 'Ссылка должна быть валидным URL',
       alreadyExist: 'RSS уже существует',
-      RSSNotFound: 'Ресурс не содержит валидный RSS',
       emptyField: 'Не должно быть пустым',
-      parserError: 'Возникла ошибка парсинга',
+      parserError: 'Ресурс не содержит валидный RSS',
       loadError: 'Ошибка сети',
     },
   },
