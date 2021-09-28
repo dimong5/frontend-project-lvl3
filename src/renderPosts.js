@@ -39,8 +39,7 @@ const renderPosts = (watchedState) => {
     const button = post.querySelector('button');
 
     button.addEventListener('click', (e) => {
-      const a = e.target.parentNode.querySelector('a');
-      const postId = a.dataset.id;
+      const postId = e.target.dataset.id;
       state.data.modalId = postId;
       if (state.data.hasBeenRead.indexOf(postId) === -1) {
         state.data.hasBeenRead.push(postId);

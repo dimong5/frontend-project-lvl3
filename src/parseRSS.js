@@ -15,7 +15,7 @@ const parse = (xmlString) => {
     const title = postItem.querySelector('title').textContent;
     const link = postItem.querySelector('link').textContent;
     const description = postItem.querySelector('description').textContent;
-    return [...acc, { title, link, description, feedLink }];
+    return [{ title, link, description, feedLink }, ...acc];
   }, []);
   return { feed: { feedTitle, feedDescription, feedLink }, posts };
 };
