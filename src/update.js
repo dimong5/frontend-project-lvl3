@@ -5,16 +5,19 @@ const update = (watchedState) => {
   const data = watchedState.data.links;
   if (data.length !== 0) {
     const requests = data.map((url) => {
-      return axios.get(
-        `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-          url
-        )}`
-      );
+      return axios
+        .get(
+          `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
+            url
+          )}`
+        )
+        .catch(console.log);
     });
     Promise.all(requests).then((results) => {
       results.forEach((result) => {
         const old = watchedState.data.posts;
         const newParsed = parseRSS(result.data.contents);
+        if (!newParsed) return;
         const { feedLink } = newParsed.feed;
         const oldFilteredByLink = old.filter(
           (post) => post.feedLink === feedLink
