@@ -5,15 +5,15 @@ import * as yup from 'yup';
 import i18next from 'i18next';
 import axios from 'axios';
 import onChange from 'on-change';
-import watcher from './view.js';
+import watcher from './view';
 import resources from './locales';
-import parseRSS from './parseRSS.js';
-import update from './update.js';
+import parseRSS from './parseRSS';
+import update from './update';
 
 const init = () => {
   const state = {
     form: {
-      state: '',
+      state: 'init',
       error: null,
     },
     data: {
@@ -82,6 +82,7 @@ const init = () => {
                   )}`
                 )
                 .then((response) => {
+                  watchedState.network.state = 'init';
                   const parsedData = parseRSS(response.data.contents);
                   if (parsedData) {
                     let counter = watchedState.data.posts.length + 1;
@@ -99,13 +100,11 @@ const init = () => {
                     watchedState.data.posts = postsArray;
                     watchedState.data.feed = parsedData.feed;
                     watchedState.network.state = 'success';
-                    watchedState.network.state = 'init';
                   } else {
                     watchedState.network.state = 'parserError';
                   }
                 })
-                .catch((er) => {
-                  console.log('network error', er);
+                .catch(() => {
                   watchedState.network.state = 'failed';
                 });
             }
@@ -113,7 +112,6 @@ const init = () => {
           .catch((err) => {
             watchedState.form.state = 'init';
             watchedState.form.error = err.errors;
-            console.log('error', watchedState.form.error);
             watchedState.form.state = 'invalid';
           });
       });

@@ -26,8 +26,11 @@ export default (state, i18next, ...params) => {
           feedback.textContent = state.form.error;
         }
         break;
+      case 'init':
+        feedback.textContent = '';
+        break;
       default:
-        console.log('init state');
+        throw new Error(`Unknown form.state`);
     }
   };
 
@@ -59,8 +62,11 @@ export default (state, i18next, ...params) => {
         feedback.classList.add('text-danger');
         feedback.textContent = i18next.t('errors.parserError');
         break;
+      case 'init':
+        feedback.textContent = '';
+        break;
       default:
-        console.log('unknown network state');
+        throw new Error('unknown network state');
     }
   };
 

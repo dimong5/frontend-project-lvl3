@@ -1,5 +1,5 @@
 import axios from 'axios';
-import parseRSS from './parseRSS.js';
+import parseRSS from './parseRSS';
 
 const update = (watchedState) => {
   const data = watchedState.data.links;
@@ -11,7 +11,7 @@ const update = (watchedState) => {
             url
           )}`
         )
-        .catch(console.log);
+        .catch(() => false);
     });
     Promise.all(requests).then((results) => {
       results.forEach((result) => {
