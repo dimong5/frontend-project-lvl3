@@ -8,14 +8,16 @@ const parse = (xmlString) => {
   const feedTitle = xmlTree.querySelector('channel > title').textContent;
   const feedLink = xmlTree.querySelector('channel > link').textContent;
   const feedDescription = xmlTree.querySelector(
-    'channel > description'
+    'channel > description',
   ).textContent;
 
   const posts = postItems.reduce((acc, postItem) => {
     const title = postItem.querySelector('title').textContent;
     const link = postItem.querySelector('link').textContent;
     const description = postItem.querySelector('description').textContent;
-    return [{ title, link, description, feedLink }, ...acc];
+    return [{
+      title, link, description, feedLink,
+    }, ...acc];
   }, []);
   return { feed: { feedTitle, feedDescription, feedLink }, posts };
 };

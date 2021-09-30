@@ -4,15 +4,13 @@ import parseRSS from './parseRSS';
 const update = (watchedState) => {
   const data = watchedState.data.links;
   if (data.length !== 0) {
-    const requests = data.map((url) => {
-      return axios
-        .get(
-          `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-            url
-          )}`
-        )
-        .catch(() => false);
-    });
+    const requests = data.map((url) => axios
+      .get(
+        `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
+          url,
+        )}`,
+      )
+      .catch(() => false));
     Promise.all(requests).then((results) => {
       results.forEach((result) => {
         const old = watchedState.data.posts;
@@ -20,12 +18,10 @@ const update = (watchedState) => {
         if (!newParsed) return;
         const { feedLink } = newParsed.feed;
         const oldFilteredByLink = old.filter(
-          (post) => post.feedLink === feedLink
+          (post) => post.feedLink === feedLink,
         );
         const diff = newParsed.posts.reduce((acc, post) => {
-          const dubbedPosts = oldFilteredByLink.filter((item) => {
-            return item.title === post.title;
-          });
+          const dubbedPosts = oldFilteredByLink.filter((item) => item.title === post.title);
           if (dubbedPosts.length === 0) {
             return [...acc, post];
           }

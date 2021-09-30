@@ -30,7 +30,7 @@ export default (state, i18next, ...params) => {
         feedback.textContent = '';
         break;
       default:
-        throw new Error(`Unknown form.state`);
+        throw new Error('Unknown form.state');
     }
   };
 

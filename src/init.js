@@ -78,8 +78,8 @@ const init = () => {
               axios
                 .get(
                   `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-                    value
-                  )}`
+                    value,
+                  )}`,
                 )
                 .then((response) => {
                   watchedState.network.state = 'init';
