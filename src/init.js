@@ -1,5 +1,4 @@
 import 'bootstrap';
-import './scss/styles.scss';
 import { setLocale } from 'yup';
 import * as yup from 'yup';
 import i18next from 'i18next';
