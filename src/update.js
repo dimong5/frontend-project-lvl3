@@ -1,18 +1,22 @@
 // import axios from 'axios';
+import axios from 'axios';
 import _ from 'lodash';
-import getRSS from './getRSS';
 import parseRSS from './parseRSS';
 
-const update = (watchedState) => {
-  const data = watchedState.data.links;
-  if (data.length !== 0) {
-    const requests = data.map((url) => getRSS(url)
+const update = (state) => {
+  const { links } = state.data;
+  if (links.length !== 0) {
+    const requests = links.map((url) => axios.get(
+      `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
+        url,
+      )}`,
+    )
       .catch(() => false));
     Promise.all(requests).then((results) => {
       results.forEach((result) => {
-        const old = watchedState.data.posts;
+        const old = state.data.posts;
         const newParsed = parseRSS(result.data.contents);
-        if (!newParsed) return;
+        // if (!newParsed) return;
         const { feedLink } = newParsed.feed;
         const oldFilteredByLink = old.filter(
           (post) => post.feedLink === feedLink,
@@ -30,12 +34,12 @@ const update = (watchedState) => {
             postWithId.id = _.uniqueId();
             return postWithId;
           });
-          watchedState.data.posts.push(...diffIdAdded);
+          state.data.posts.push(...diffIdAdded);
         }
       });
-    });
+    }).catch(console.log);
   }
-  setTimeout(update, 5000, watchedState);
+  setTimeout(update, 5000, state);
 };
 
 export default update;

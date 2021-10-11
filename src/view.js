@@ -64,15 +64,14 @@ export default (state, i18next, form, input, ...params) => {
     }
   };
 
-  const posts = document.querySelector('.posts');
   const path = params[0];
   const value = params[1];
   switch (path) {
     case 'form.state': handleFormState(value); break;
-    case 'data.posts': posts.innerHTML = ''; renderPosts(state, i18next); break;
+    case 'data.posts': renderPosts(state, i18next); break;
     case 'data.feeds': renderFeed(state, i18next); break;
     case 'network.state': handleNetworkState(value); break;
-    case 'data.hasBeenRead': posts.innerHTML = ''; renderPosts(state, i18next); break;
+    case 'data.hasBeenRead': renderPosts(state, i18next); break;
     case 'data.modalId': renderModal(state, value); break;
     default: break;
   }

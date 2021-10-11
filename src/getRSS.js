@@ -20,12 +20,8 @@ export default (url, state) => axios
       ...state.data.posts,
       ...parsedPostsIdAdded,
     ];
-    const feedArray = [
-      ...state.data.feeds,
-      parsedData.feed,
-    ];
     state.data.posts = postsArray;
-    state.data.feeds = feedArray;
+    state.data.feeds.push(parsedData.feed);
     state.network.state = 'success';
     state.data.links.push(url);
   })
