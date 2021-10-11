@@ -1,12 +1,11 @@
 import 'bootstrap';
 import { setLocale } from 'yup';
-import * as yup from 'yup';
 import i18next from 'i18next';
-import axios from 'axios';
 import onChange from 'on-change';
+import validateUrl from './validateUrl';
 import watcher from './view';
 import resources from './locales';
-import parseRSS from './parseRSS';
+import getRSS from './getRSS';
 import update from './update';
 
 const init = () => {
@@ -18,7 +17,7 @@ const init = () => {
     data: {
       links: [],
       posts: [],
-      feed: [],
+      feeds: [],
       hasBeenRead: [],
       feedCount: 0,
       modalId: '',
@@ -39,79 +38,39 @@ const init = () => {
       setLocale({
         mixed: {
           required: i18n('errors.emptyField'),
+          notOneOf: i18n('errors.alreadyExist'),
         },
         string: {
           url: i18n('errors.notValidURL'),
         },
       });
-      const schema = yup.string().required().url();
 
       const form = document.querySelector('.rss-form');
       const input = document.querySelector('input[name=url]');
 
       const watchedState = onChange(state, (...params) => {
-        watcher(watchedState, i18nextInstance, ...params);
+        watcher(watchedState, i18nextInstance, form, input, ...params);
       });
 
       update(watchedState);
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        schema
-          .validate(input.value)
+        validateUrl(input.value, watchedState.data.links)
           .then((value) => {
             watchedState.form.state = 'init';
-            if (watchedState.data.links.findIndex((l) => l === value) !== -1) {
-              watchedState.form.error = 'alreadyExist';
-              watchedState.form.state = 'invalid';
-            } else {
-              watchedState.data.links.push(value);
-              watchedState.form.state = 'valid';
-              watchedState.form.error = null;
-            }
+            watchedState.form.state = 'valid';
+            watchedState.form.error = null;
             return value;
-          })
-          .then((value) => {
-            if (watchedState.form.state === 'valid') {
-              watchedState.network.state = 'loading';
-              axios
-                .get(
-                  `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-                    value,
-                  )}`,
-                )
-                .then((response) => {
-                  watchedState.network.state = 'init';
-                  const parsedData = parseRSS(response.data.contents);
-                  if (parsedData) {
-                    let counter = watchedState.data.posts.length + 1;
-                    const parsedPostsIdAdded = parsedData.posts.map((post) => {
-                      const result = post;
-                      result.id = counter;
-                      counter += 1;
-                      return result;
-                    });
-                    watchedState.data.feedCount += 1;
-                    const postsArray = [
-                      ...watchedState.data.posts,
-                      ...parsedPostsIdAdded,
-                    ];
-                    watchedState.data.posts = postsArray;
-                    watchedState.data.feed = parsedData.feed;
-                    watchedState.network.state = 'success';
-                  } else {
-                    watchedState.network.state = 'parserError';
-                  }
-                })
-                .catch(() => {
-                  watchedState.network.state = 'failed';
-                });
-            }
-          })
-          .catch((err) => {
+          }).catch((err) => {
             watchedState.form.state = 'init';
             watchedState.form.error = err.errors;
             watchedState.form.state = 'invalid';
+          })
+          .then((value) => {
+            if (watchedState.form.state !== 'valid') return;
+            watchedState.network.state = 'loading';
+            getRSS(value, watchedState);
           });
       });
     });

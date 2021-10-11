@@ -1,15 +1,12 @@
-import axios from 'axios';
+// import axios from 'axios';
+import _ from 'lodash';
+import getRSS from './getRSS';
 import parseRSS from './parseRSS';
 
 const update = (watchedState) => {
   const data = watchedState.data.links;
   if (data.length !== 0) {
-    const requests = data.map((url) => axios
-      .get(
-        `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-          url,
-        )}`,
-      )
+    const requests = data.map((url) => getRSS(url)
       .catch(() => false));
     Promise.all(requests).then((results) => {
       results.forEach((result) => {
@@ -28,11 +25,9 @@ const update = (watchedState) => {
           return acc;
         }, []);
         if (diff.length !== 0) {
-          let counter = watchedState.data.posts.length + 1;
           const diffIdAdded = diff.map((post) => {
             const postWithId = post;
-            postWithId.id = counter;
-            counter += 1;
+            postWithId.id = _.uniqueId();
             return postWithId;
           });
           watchedState.data.posts.push(...diffIdAdded);

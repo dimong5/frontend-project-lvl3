@@ -3,10 +3,8 @@ import renderPosts from './renderPosts';
 import renderFeed from './renderFeed';
 import renderModal from './renderModal';
 
-export default (state, i18next, ...params) => {
-  const form = document.querySelector('form');
+export default (state, i18next, form, input, ...params) => {
   const feedback = document.querySelector('p.feedback');
-  const input = document.querySelector('input[name=url]');
   const button = document.querySelector('button[type="submit"]');
 
   const handleFormState = (value) => {
@@ -20,11 +18,7 @@ export default (state, i18next, ...params) => {
       case 'invalid':
         input.classList.add('is-invalid');
         feedback.classList.add('text-danger');
-        if (state.form.error === 'alreadyExist') {
-          feedback.textContent = i18next.t(`errors.${state.form.error}`);
-        } else {
-          feedback.textContent = state.form.error;
-        }
+        feedback.textContent = state.form.error;
         break;
       case 'init':
         feedback.textContent = '';
@@ -48,7 +42,7 @@ export default (state, i18next, ...params) => {
         feedback.classList.add('text-success');
         feedback.textContent = i18next.t('loaded');
         break;
-      case 'failed':
+      case 'networkFailure':
         input.removeAttribute('readonly');
         button.disabled = false;
         feedback.classList.remove('text-success');
@@ -70,25 +64,16 @@ export default (state, i18next, ...params) => {
     }
   };
 
+  const posts = document.querySelector('.posts');
   const path = params[0];
   const value = params[1];
-  if (path === 'form.state') handleFormState(value);
-  if (path === 'data.posts') {
-    document.querySelector('.posts').innerHTML = '';
-    renderPosts(state);
-  }
-  if (path === 'data.feed') {
-    renderFeed(state);
-  }
-  if (path === 'network.state') {
-    handleNetworkState(value);
-  }
-  if (path === 'data.hasBeenRead') {
-    const posts = document.querySelector('.posts');
-    posts.innerHTML = '';
-    renderPosts(state);
-  }
-  if (path === 'data.modalId') {
-    renderModal(state, value);
+  switch (path) {
+    case 'form.state': handleFormState(value); break;
+    case 'data.posts': posts.innerHTML = ''; renderPosts(state, i18next); break;
+    case 'data.feeds': renderFeed(state, i18next); break;
+    case 'network.state': handleNetworkState(value); break;
+    case 'data.hasBeenRead': posts.innerHTML = ''; renderPosts(state, i18next); break;
+    case 'data.modalId': renderModal(state, value); break;
+    default: break;
   }
 };

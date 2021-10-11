@@ -2,7 +2,7 @@ const parse = (xmlString) => {
   const parser = new DOMParser();
   const xmlTree = parser.parseFromString(xmlString, 'application/xml');
   if (xmlTree.querySelector('parsererror')) {
-    return false;
+    throw new Error('parse error');
   }
   const postItems = [...xmlTree.querySelectorAll('item')];
   const feedTitle = xmlTree.querySelector('channel > title').textContent;

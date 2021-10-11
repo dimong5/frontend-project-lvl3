@@ -1,16 +1,14 @@
-const renderPosts = (watchedState) => {
+const renderPosts = (watchedState, i18next) => {
   const state = watchedState;
   const { posts } = state.data;
   const { hasBeenRead } = state.data;
   const postsWrapper = document.querySelector('.posts');
   const templatePosts = `<div class="card border-0">
-  <div class="card-body"><h2 class="card-title h4">Посты</h2></div>
+  <div class="card-body"><h2 class="card-title h4">${i18next.t('postsHeader')}</h2></div>
     <ul class="list-group border-0 rounded-0">
     </ul>
   </div>`;
-  if (!postsWrapper.hasChildNodes()) {
-    postsWrapper.innerHTML = templatePosts;
-  }
+  postsWrapper.innerHTML = templatePosts;
   const ulPosts = document.querySelector('.posts ul');
 
   posts.forEach((post) => {
@@ -29,7 +27,7 @@ const renderPosts = (watchedState) => {
   </a>
   <button type="button" class="btn btn-outline-primary btn-sm"
     data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">
-    Просмотр
+    ${i18next.t('openModal')}
   </button>
 </li>`;
     ulPosts.innerHTML = postString + ulPosts.innerHTML;
