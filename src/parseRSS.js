@@ -6,7 +6,6 @@ const parse = (xmlString) => {
   }
   const postItems = [...xmlTree.querySelectorAll('item')];
   const feedTitle = xmlTree.querySelector('channel > title').textContent;
-  const feedLink = xmlTree.querySelector('channel > link').textContent;
   const feedDescription = xmlTree.querySelector(
     'channel > description',
   ).textContent;
@@ -16,10 +15,10 @@ const parse = (xmlString) => {
     const link = postItem.querySelector('link').textContent;
     const description = postItem.querySelector('description').textContent;
     return [{
-      title, link, description, feedLink,
+      title, link, description,
     }, ...acc];
   }, []);
-  return { feed: { feedTitle, feedDescription, feedLink }, posts };
+  return { feed: { feedTitle, feedDescription }, posts };
 };
 
 export default parse;

@@ -8,6 +8,7 @@ export default (state, i18next, form, input, ...params) => {
   const button = document.querySelector('button[type="submit"]');
 
   const handleFormState = (value) => {
+    const error = state.form.error ? state.form.error.key : null;
     switch (value) {
       case 'valid':
         input.classList.remove('is-invalid');
@@ -18,7 +19,7 @@ export default (state, i18next, form, input, ...params) => {
       case 'invalid':
         input.classList.add('is-invalid');
         feedback.classList.add('text-danger');
-        feedback.textContent = state.form.error;
+        feedback.textContent = i18next.t(error);
         break;
       case 'init':
         feedback.textContent = '';
@@ -71,7 +72,7 @@ export default (state, i18next, form, input, ...params) => {
     case 'data.posts': renderPosts(state, i18next); break;
     case 'data.feeds': renderFeed(state, i18next); break;
     case 'network.state': handleNetworkState(value); break;
-    case 'data.hasBeenRead': renderPosts(state, i18next); break;
+    case 'uiState.openedPostsIds': renderPosts(state, i18next); break;
     case 'data.modalId': renderModal(state, value); break;
     default: break;
   }

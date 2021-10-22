@@ -1,34 +1,33 @@
 import axios from 'axios';
 import _ from 'lodash';
 import parseRSS from './parseRSS';
+import buildURL from './buildURL';
 
 export default (url, state) => axios
-  .get(
-    `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(
-      url,
-    )}`,
-  )
+  .get(buildURL(url))
   .then((response) => {
     state.network.state = 'init';
     const parsedData = parseRSS(response.data.contents);
     const parsedPostsIdAdded = parsedData.posts.map((post) => {
-      const result = post;
-      result.id = _.uniqueId();
-      return result;
+      post.id = _.uniqueId();
+      post.feedLink = url;
+      return post;
     });
+
     const postsArray = [
       ...state.data.posts,
       ...parsedPostsIdAdded,
     ];
+
     state.data.posts = postsArray;
+    parsedData.feed.feedLink = url;
     state.data.feeds.push(parsedData.feed);
     state.network.state = 'success';
-    state.data.links.push(url);
   })
   .catch((networkError) => {
-    if (networkError.message === 'parse error') {
-      state.network.state = 'parserError';
-    } else {
-      state.network.state = 'networkFailure';
+    switch (networkError.message) {
+      case 'parse error': state.network.state = 'parserError'; break;
+      case 'networkFailure': state.network.state = 'networkFailure'; break;
+      default: throw new Error(networkError);
     }
   });

@@ -16,11 +16,6 @@
     "url": "https://github.com/dimong5/frontend-project-lvl3/issues"
   },
   "homepage": "https://github.com/dimong5/frontend-project-lvl3#readme",
-  "jest": {
-    "verbose": true,
-    "testURL": "http://localhost/",
-    "testEnvironment": "jsdom"
-  },
   "main": "src/init.js",
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.0",
