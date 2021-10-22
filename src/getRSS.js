@@ -27,7 +27,7 @@ export default (url, state) => axios
   .catch((networkError) => {
     switch (networkError.message) {
       case 'parse error': state.network.state = 'parserError'; break;
-      case 'networkFailure': state.network.state = 'networkFailure'; break;
+      case 'Network Error': state.network.state = 'networkFailure'; break;
       default: throw new Error(networkError);
     }
   });
