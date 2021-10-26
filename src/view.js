@@ -1,12 +1,9 @@
 import { find } from 'lodash';
 
 export default (watchedState, i18next, elements, path, value) => {
-  const { form } = elements;
-  const { input } = elements;
-  const { feedback } = elements;
-  const { button } = elements;
-  const { feedsWrapper } = elements;
-  const { postsWrapper } = elements;
+  const {
+    form, input, feedback, button, feedsWrapper, postsWrapper,
+  } = elements;
 
   const handleFormState = (state) => {
     switch (state.form.state) {
