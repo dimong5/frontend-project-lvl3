@@ -13,22 +13,6 @@ const validateUrl = (url, links) => {
     .validate(url);
 };
 
-const form = document.querySelector('.rss-form');
-const input = document.querySelector('input[name=url]');
-const feedback = document.querySelector('p.feedback');
-const button = document.querySelector('button[type="submit"]');
-const feedsWrapper = document.querySelector('.feeds');
-const postsWrapper = document.querySelector('.posts');
-
-const elements = {
-  form,
-  input,
-  feedback,
-  button,
-  feedsWrapper,
-  postsWrapper,
-};
-
 const init = () => {
   const state = {
     form: {
@@ -57,6 +41,22 @@ const init = () => {
     })
     .then(() => {
       yup.setLocale(resources.locales);
+
+      const form = document.querySelector('.rss-form');
+      const input = document.querySelector('input[name=url]');
+      const feedback = document.querySelector('p.feedback');
+      const button = document.querySelector('button[type="submit"]');
+      const feedsWrapper = document.querySelector('.feeds');
+      const postsWrapper = document.querySelector('.posts');
+
+      const elements = {
+        form,
+        input,
+        feedback,
+        button,
+        feedsWrapper,
+        postsWrapper,
+      };
 
       const watchedState = onChange(state, (path, value) => {
         watcher(watchedState, i18nextInstance, elements, path, value);
