@@ -108,7 +108,7 @@ export default (appState, i18next, elements) => {
     const result = `<div class="card border-0">
     <div class="card-body"><h2 class="card-title h4">${i18next.t('postsHeader')}</h2></div>
       <ul class="list-group border-0 rounded-0">
-      ${posts.map(handlePost).reverse().join('')}
+      ${posts.map(handlePost).join('')}
       </ul>
     </div>`;
     postsWrapper.innerHTML = result;
