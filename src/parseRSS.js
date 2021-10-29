@@ -1,4 +1,4 @@
-const parse = (xmlString) => {
+export default (xmlString) => {
   const parser = new DOMParser();
   const xmlTree = parser.parseFromString(xmlString, 'application/xml');
   if (xmlTree.querySelector('parsererror')) {
@@ -10,15 +10,13 @@ const parse = (xmlString) => {
     'channel > description',
   ).textContent;
 
-  const posts = postItems.reduce((acc, postItem) => {
+  const posts = postItems.map((postItem) => {
     const title = postItem.querySelector('title').textContent;
     const link = postItem.querySelector('link').textContent;
     const description = postItem.querySelector('description').textContent;
-    return [{
+    return {
       title, link, description,
-    }, ...acc];
-  }, []);
+    };
+  });
   return { feed: { feedTitle, feedDescription }, posts };
 };
-
-export default parse;

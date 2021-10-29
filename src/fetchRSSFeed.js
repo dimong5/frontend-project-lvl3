@@ -1,23 +1,19 @@
 import axios from 'axios';
-import _ from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 import parseRSS from './parseRSS';
-import buildURL from './buildURL';
+import addProxyToURL from './addProxyToURL';
 
 export default (url, state) => {
   state.network.state = 'loading';
   axios
-    .get(buildURL(url))
+    .get(addProxyToURL(url))
     .then((response) => {
       state.network.state = 'init';
       const parsedData = parseRSS(response.data.contents);
-      const parsedPostsIdAdded = parsedData.posts.map((post) => {
-        post.id = _.uniqueId();
-        post.feedLink = url;
-        return post;
-      });
+      const parsedPostsIdAdded = parsedData.posts
+        .map((post) => ({ ...post, id: uniqueId(), feedLink: url }));
       state.data.posts = state.data.posts.concat(parsedPostsIdAdded);
-      parsedData.feed.feedLink = url;
-      state.data.feeds = state.data.feeds.concat(parsedData.feed);
+      state.data.feeds = state.data.feeds.concat({ ...parsedData.feed, feedLink: url });
       state.network.state = 'success';
     })
     .catch((error) => {

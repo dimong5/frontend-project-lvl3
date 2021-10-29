@@ -1,9 +1,12 @@
-import { find } from 'lodash';
+import find from 'lodash/find';
+import onChange from 'on-change';
 
-export default (watchedState, i18next, elements, path, value) => {
+export default (appState, i18next, elements) => {
   const {
     form, input, feedback, button, feedsWrapper, postsWrapper,
   } = elements;
+
+  const sanitizeHTML = (str) => str.replace(/[^\w. ]/gi, (c) => `&#${c.charCodeAt(0)};`);
 
   const handleFormState = (state) => {
     switch (state.form.state) {
@@ -62,12 +65,12 @@ export default (watchedState, i18next, elements, path, value) => {
     }
   };
 
-  const renderFeeds = (state) => {
+  const handleFeeds = (state) => {
     const { feeds } = state.data;
-    const renderFeed = (feed) => `<li class="list-group-item border-0 border-end-0">
-      <h3 class="h6 m-0">${feed.feedTitle}</h3>
+    const handleFeed = (feed) => `<li class="list-group-item border-0 border-end-0">
+      <h3 class="h6 m-0">${sanitizeHTML(feed.feedTitle)}</h3>
         <p class="m-0 small text-black-50">
-          ${feed.feedDescription}
+          ${sanitizeHTML(feed.feedDescription)}
         </p>
       </li>`;
 
@@ -78,22 +81,22 @@ export default (watchedState, i18next, elements, path, value) => {
           </h2>
         </div>
         <ul class="list-group border-0 rounded-0">
-          ${feeds.map(renderFeed).reverse().join('')}
+          ${feeds.map(handleFeed).reverse().join('')}
         </ul>
     </div>`;
   };
 
-  const renderPosts = (state) => {
+  const handlePosts = (state) => {
     const { posts } = state.data;
-    const renderPost = (post) => {
+    const handlePost = (post) => {
       const isOpenedPost = state.uiState.openedPostsIds.has(post.id);
       const font = isOpenedPost ? 'fw-normal' : 'fw-bold';
       return `
       <li class="list-group-item d-flex justify-content-between 
         align-items-start border-0 border-end-0">
-      <a href="${post.link}" class="${font}" data-id="${post.id}" target="_blank"
+      <a href="${sanitizeHTML(post.link)}" class="${font}" data-id="${post.id}" target="_blank"
         rel="noopener noreferrer">
-        ${post.title}
+        ${sanitizeHTML(post.title)}
       </a>
       <button type="button" class="btn btn-outline-primary btn-sm"
         data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">
@@ -105,13 +108,13 @@ export default (watchedState, i18next, elements, path, value) => {
     const result = `<div class="card border-0">
     <div class="card-body"><h2 class="card-title h4">${i18next.t('postsHeader')}</h2></div>
       <ul class="list-group border-0 rounded-0">
-      ${posts.map(renderPost).reverse().join('')}
+      ${posts.map(handlePost).reverse().join('')}
       </ul>
     </div>`;
     postsWrapper.innerHTML = result;
   };
 
-  const renderModal = (state, postId) => {
+  const handleModal = (state, postId) => {
     const post = find(state.data.posts, { id: postId });
     const title = document.querySelector('.modal-title');
     const body = document.querySelector('.modal-body');
@@ -120,14 +123,16 @@ export default (watchedState, i18next, elements, path, value) => {
     body.textContent = post.description;
     link.setAttribute('href', post.link);
   };
-
-  switch (path) {
-    case 'form.state': handleFormState(watchedState); break;
-    case 'data.posts': renderPosts(watchedState); break;
-    case 'data.feeds': renderFeeds(watchedState); break;
-    case 'network.state': handleNetworkState(watchedState); break;
-    case 'uiState.openedPostsIds': renderPosts(watchedState); break;
-    case 'modalId': renderModal(watchedState, value); break;
-    default: break;
-  }
+  const watchedState = onChange(appState, (path, value) => {
+    switch (path) {
+      case 'form.state': handleFormState(watchedState); break;
+      case 'data.posts': handlePosts(watchedState); break;
+      case 'data.feeds': handleFeeds(watchedState); break;
+      case 'network.state': handleNetworkState(watchedState); break;
+      case 'uiState.openedPostsIds': handlePosts(watchedState); break;
+      case 'postIdForModal': handleModal(watchedState, value); break;
+      default: break;
+    }
+  });
+  return watchedState;
 };
