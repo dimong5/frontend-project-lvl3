@@ -11,7 +11,7 @@ const updatePosts = (state) => {
       const posts = parsedData
         .posts.map((post) => ({ ...post, id: uniqueId(), feedLink: feed.link }));
       const diff = differenceBy(posts, state.data.posts, 'title');
-      state.data.posts = state.data.posts.concat(diff);
+      state.data.posts = diff.concat(state.data.posts);
     })
     .catch(() => null));
   return Promise.all(requests)

@@ -12,7 +12,7 @@ export default (url, state) => {
       const parsedData = parseRSS(response.data.contents);
       const posts = parsedData.posts
         .map((post) => ({ ...post, id: uniqueId(), feedLink: url }));
-      state.data.posts = state.data.posts.concat(posts);
+      state.data.posts = posts.concat(state.data.posts);
       state.data.feeds = state.data.feeds.concat({ ...parsedData.feed, link: url });
       state.network.state = 'success';
     })
