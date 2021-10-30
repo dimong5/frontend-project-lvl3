@@ -41,12 +41,12 @@ export default (appState, i18next, elements) => {
         feedback.classList.add('text-success');
         feedback.textContent = i18next.t('loaded');
         break;
-      case 'networkFailure':
+      case 'networkError':
         input.removeAttribute('readonly');
         button.disabled = false;
         feedback.classList.remove('text-success');
         feedback.classList.add('text-danger');
-        feedback.textContent = i18next.t('errors.loadError');
+        feedback.textContent = i18next.t('errors.networkError');
         break;
       case 'parserError':
         input.removeAttribute('readonly');
