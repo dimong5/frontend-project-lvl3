@@ -6,8 +6,8 @@ import resources from './locales';
 import fetchRSSFeed from './fetchRSSFeed';
 import updatePosts from './updatePosts';
 
-const validateUrl = (url, links) => {
-  const schema = yup.string().required().url().notOneOf(links);
+const validateUrl = (url, usedUrls) => {
+  const schema = yup.string().required().url().notOneOf(usedUrls);
   return schema
     .validate(url);
 };
@@ -25,7 +25,7 @@ const init = () => {
       posts: [],
       feeds: [],
     },
-    PostIdForModal: '',
+    postIdForModal: '',
     network: {
       state: 'init',
       error: null,
@@ -52,13 +52,11 @@ const init = () => {
 
       const watchedState = watcher(state, i18nextInstance, elements);
 
-      updatePosts(watchedState);
+      setTimeout(() => updatePosts(watchedState), 5000);
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const links = watchedState.data.feeds.map((feed) => feed.feedLink);
-        watchedState.form.state = 'init';
-        watchedState.form.error = null;
+        const links = watchedState.data.feeds.map((feed) => feed.link);
         validateUrl(elements.input.value, links)
           .then((value) => {
             watchedState.form.state = 'valid';
@@ -67,10 +65,13 @@ const init = () => {
           }).catch((err) => {
             watchedState.form.error = err.message.key;
             watchedState.form.state = 'invalid';
+          }).then(() => {
+            watchedState.form.state = 'init';
+            watchedState.form.error = null;
           });
       });
       elements.postsWrapper.addEventListener('click', (e) => {
-        if (e.target.classList.contains('btn') && e.target.hasAttribute('data-id')) {
+        if (e.target.hasAttribute('data-id')) {
           const postId = e.target.dataset.id;
           watchedState.postIdForModal = postId;
           watchedState.uiState.openedPostsIds.add(postId);

@@ -2,18 +2,18 @@ export default (xmlString) => {
   const parser = new DOMParser();
   const xmlTree = parser.parseFromString(xmlString, 'application/xml');
   if (xmlTree.querySelector('parsererror')) {
-    throw new Error('parse error');
+    throw new Error('Parser Error');
   }
-  const postItems = [...xmlTree.querySelectorAll('item')];
+  const items = [...xmlTree.querySelectorAll('item')];
   const feedTitle = xmlTree.querySelector('channel > title').textContent;
   const feedDescription = xmlTree.querySelector(
     'channel > description',
   ).textContent;
 
-  const posts = postItems.map((postItem) => {
-    const title = postItem.querySelector('title').textContent;
-    const link = postItem.querySelector('link').textContent;
-    const description = postItem.querySelector('description').textContent;
+  const posts = items.map((item) => {
+    const title = item.querySelector('title').textContent;
+    const link = item.querySelector('link').textContent;
+    const description = item.querySelector('description').textContent;
     return {
       title, link, description,
     };

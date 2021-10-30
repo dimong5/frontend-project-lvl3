@@ -1,12 +1,12 @@
 import find from 'lodash/find';
 import onChange from 'on-change';
 
+const sanitizeHTML = (str) => str.replace(/[^\w. ]/gi, (c) => `&#${c.charCodeAt(0)};`);
+
 export default (appState, i18next, elements) => {
   const {
     form, input, feedback, button, feedsWrapper, postsWrapper,
   } = elements;
-
-  const sanitizeHTML = (str) => str.replace(/[^\w. ]/gi, (c) => `&#${c.charCodeAt(0)};`);
 
   const handleFormState = (state) => {
     switch (state.form.state) {
@@ -21,9 +21,7 @@ export default (appState, i18next, elements) => {
         feedback.classList.add('text-danger');
         feedback.textContent = i18next.t(state.form.error);
         break;
-      case 'init':
-        feedback.textContent = '';
-        break;
+      case 'init': break;
       default:
         throw new Error('Unknown form.state');
     }
@@ -61,13 +59,17 @@ export default (appState, i18next, elements) => {
         feedback.textContent = '';
         break;
       default:
-        throw new Error('unknown network state');
+        input.removeAttribute('readonly');
+        button.disabled = false;
+        feedback.classList.remove('text-success');
+        feedback.classList.add('text-danger');
+        feedback.textContent = state.network.state;
     }
   };
 
   const handleFeeds = (state) => {
     const { feeds } = state.data;
-    const handleFeed = (feed) => `<li class="list-group-item border-0 border-end-0">
+    const renderFeed = (feed) => `<li class="list-group-item border-0 border-end-0">
       <h3 class="h6 m-0">${sanitizeHTML(feed.feedTitle)}</h3>
         <p class="m-0 small text-black-50">
           ${sanitizeHTML(feed.feedDescription)}
@@ -81,14 +83,14 @@ export default (appState, i18next, elements) => {
           </h2>
         </div>
         <ul class="list-group border-0 rounded-0">
-          ${feeds.map(handleFeed).reverse().join('')}
+          ${feeds.map(renderFeed).reverse().join('')}
         </ul>
     </div>`;
   };
 
   const handlePosts = (state) => {
     const { posts } = state.data;
-    const handlePost = (post) => {
+    const renderPost = (post) => {
       const isOpenedPost = state.uiState.openedPostsIds.has(post.id);
       const font = isOpenedPost ? 'fw-normal' : 'fw-bold';
       return `
@@ -108,7 +110,7 @@ export default (appState, i18next, elements) => {
     const result = `<div class="card border-0">
     <div class="card-body"><h2 class="card-title h4">${i18next.t('postsHeader')}</h2></div>
       <ul class="list-group border-0 rounded-0">
-      ${posts.map(handlePost).join('')}
+      ${posts.map(renderPost).reverse().join('')}
       </ul>
     </div>`;
     postsWrapper.innerHTML = result;

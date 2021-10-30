@@ -5,12 +5,12 @@ import parseRSS from './parseRSS';
 import addProxyToURL from './addProxyToURL';
 
 const updatePosts = (state) => {
-  const requests = state.data.feeds.map((feed) => axios.get(addProxyToURL(feed.feedLink))
+  const requests = state.data.feeds.map((feed) => axios.get(addProxyToURL(feed.link))
     .then((response) => {
-      const newParsed = parseRSS(response.data.contents);
-      const newPosts = newParsed
-        .posts.map((post) => ({ ...post, id: uniqueId(), feedLink: feed.feedLink }));
-      const diff = differenceBy(newPosts, state.data.posts, 'title');
+      const parsedData = parseRSS(response.data.contents);
+      const posts = parsedData
+        .posts.map((post) => ({ ...post, id: uniqueId(), feedLink: feed.link }));
+      const diff = differenceBy(posts, state.data.posts, 'title');
       state.data.posts = state.data.posts.concat(diff);
     })
     .catch(() => null));
