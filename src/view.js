@@ -60,9 +60,9 @@ export default (appState, i18next, elements) => {
   const handleFeeds = (state) => {
     const { feeds } = state.data;
     const renderFeed = (feed) => `<li class="list-group-item border-0 border-end-0">
-      <h3 class="h6 m-0">${sanitizeHTML(feed.feedTitle)}</h3>
+      <h3 class="h6 m-0">${sanitizeHTML(feed.title)}</h3>
         <p class="m-0 small text-black-50">
-          ${sanitizeHTML(feed.feedDescription)}
+          ${sanitizeHTML(feed.description)}
         </p>
       </li>`;
 

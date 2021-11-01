@@ -5,18 +5,15 @@ export default (xmlString) => {
     throw new Error('Parser Error');
   }
   const itemsDOM = [...xmlTree.querySelectorAll('item')];
-  const feedTitle = xmlTree.querySelector('channel > title').textContent;
-  const feedDescription = xmlTree.querySelector(
+  const title = xmlTree.querySelector('channel > title').textContent;
+  const description = xmlTree.querySelector(
     'channel > description',
   ).textContent;
 
-  const items = itemsDOM.map((item) => {
-    const title = item.querySelector('title').textContent;
-    const link = item.querySelector('link').textContent;
-    const description = item.querySelector('description').textContent;
-    return {
-      title, link, description,
-    };
-  });
-  return { feedTitle, feedDescription, items };
+  const items = itemsDOM.map((item) => ({
+    title: item.querySelector('title').textContent,
+    link: item.querySelector('link').textContent,
+    description: item.querySelector('description').textContent,
+  }));
+  return { title, description, items };
 };

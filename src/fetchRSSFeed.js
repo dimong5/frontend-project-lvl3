@@ -12,8 +12,8 @@ export default (url, state) => {
       const posts = parsedData.items
         .map((item) => ({ ...item, id: uniqueId(), feedLink: url }));
       state.data.posts = posts.concat(state.data.posts);
-      const { feedDescription, feedTitle } = parsedData;
-      state.data.feeds = [{ ...{ feedDescription, feedTitle }, link: url }]
+      const { description, title } = parsedData;
+      state.data.feeds = [{ ...{ description, title }, link: url }]
         .concat(state.data.feeds);
       state.network.state = 'success';
     })
