@@ -37,10 +37,6 @@ module.exports = {
             loader: 'css-loader',
           },
           {
-            // Run postcss actions
-            loader: 'postcss-loader',
-          },
-          {
             // compiles Sass to CSS
             loader: 'sass-loader',
           },

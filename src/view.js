@@ -41,22 +41,12 @@ export default (appState, i18next, elements) => {
         feedback.classList.add('text-success');
         feedback.textContent = i18next.t('loaded');
         break;
-      case 'networkError':
+      case 'failure':
         input.removeAttribute('readonly');
         button.disabled = false;
         feedback.classList.remove('text-success');
         feedback.classList.add('text-danger');
-        feedback.textContent = i18next.t('errors.networkError');
-        break;
-      case 'parserError':
-        input.removeAttribute('readonly');
-        feedback.classList.remove('text-success');
-        button.disabled = false;
-        feedback.classList.add('text-danger');
-        feedback.textContent = i18next.t('errors.parserError');
-        break;
-      case 'init':
-        feedback.textContent = '';
+        feedback.textContent = i18next.t(`errors.${state.network.error}`);
         break;
       default:
         input.removeAttribute('readonly');
@@ -83,7 +73,7 @@ export default (appState, i18next, elements) => {
           </h2>
         </div>
         <ul class="list-group border-0 rounded-0">
-          ${feeds.map(renderFeed).reverse().join('')}
+          ${feeds.map(renderFeed).join('')}
         </ul>
     </div>`;
   };
@@ -107,13 +97,12 @@ export default (appState, i18next, elements) => {
     </li>`;
     };
 
-    const result = `<div class="card border-0">
+    postsWrapper.innerHTML = `<div class="card border-0">
     <div class="card-body"><h2 class="card-title h4">${i18next.t('postsHeader')}</h2></div>
       <ul class="list-group border-0 rounded-0">
       ${posts.map(renderPost).join('')}
       </ul>
     </div>`;
-    postsWrapper.innerHTML = result;
   };
 
   const handleModal = (state, postId) => {
@@ -132,7 +121,7 @@ export default (appState, i18next, elements) => {
       case 'data.feeds': handleFeeds(watchedState); break;
       case 'network.state': handleNetworkState(watchedState); break;
       case 'uiState.openedPostsIds': handlePosts(watchedState); break;
-      case 'postIdForModal': handleModal(watchedState, value); break;
+      case 'modalPostId': handleModal(watchedState, value); break;
       default: break;
     }
   });

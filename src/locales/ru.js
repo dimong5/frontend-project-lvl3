@@ -10,6 +10,7 @@ export default {
       emptyField: 'Не должно быть пустым',
       parserError: 'Ресурс не содержит валидный RSS',
       networkError: 'Ошибка сети',
+      unknownError: 'Незвестная ошибка',
     },
   },
 };

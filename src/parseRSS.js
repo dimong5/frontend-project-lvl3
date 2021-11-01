@@ -4,13 +4,13 @@ export default (xmlString) => {
   if (xmlTree.querySelector('parsererror')) {
     throw new Error('Parser Error');
   }
-  const items = [...xmlTree.querySelectorAll('item')];
+  const itemsDOM = [...xmlTree.querySelectorAll('item')];
   const feedTitle = xmlTree.querySelector('channel > title').textContent;
   const feedDescription = xmlTree.querySelector(
     'channel > description',
   ).textContent;
 
-  const posts = items.map((item) => {
+  const items = itemsDOM.map((item) => {
     const title = item.querySelector('title').textContent;
     const link = item.querySelector('link').textContent;
     const description = item.querySelector('description').textContent;
@@ -18,5 +18,5 @@ export default (xmlString) => {
       title, link, description,
     };
   });
-  return { feed: { feedTitle, feedDescription }, posts };
+  return { feedTitle, feedDescription, items };
 };

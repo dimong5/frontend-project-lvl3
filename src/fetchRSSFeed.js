@@ -5,22 +5,24 @@ import addProxyToURL from './addProxyToURL';
 
 export default (url, state) => {
   state.network.state = 'loading';
-  axios
+  return axios
     .get(addProxyToURL(url))
     .then((response) => {
-      state.network.state = 'init';
       const parsedData = parseRSS(response.data.contents);
-      const posts = parsedData.posts
-        .map((post) => ({ ...post, id: uniqueId(), feedLink: url }));
+      const posts = parsedData.items
+        .map((item) => ({ ...item, id: uniqueId(), feedLink: url }));
       state.data.posts = posts.concat(state.data.posts);
-      state.data.feeds = state.data.feeds.concat({ ...parsedData.feed, link: url });
+      const { feedDescription, feedTitle } = parsedData;
+      state.data.feeds = [{ ...{ feedDescription, feedTitle }, link: url }]
+        .concat(state.data.feeds);
       state.network.state = 'success';
     })
     .catch((error) => {
       switch (error.message) {
-        case 'Parser Error': state.network.state = 'parserError'; break;
-        case 'Network Error': state.network.state = 'networkError'; break;
-        default: state.network.state = error.message;
+        case 'Parser Error': state.network.error = 'parserError'; break;
+        case 'Network Error': state.network.error = 'networkError'; break;
+        default: state.network.error = 'unknownError';
       }
+      state.network.state = 'failure';
     });
 };

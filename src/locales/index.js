@@ -1,4 +1,4 @@
 import ru from './ru';
-import locales from './locales';
+import yupLocales from './yupLocales';
 
-export default { ru, locales };
+export default { ru, yupLocales };

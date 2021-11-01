@@ -25,7 +25,7 @@ const init = () => {
       posts: [],
       feeds: [],
     },
-    postIdForModal: '',
+    modalPostId: '',
     network: {
       state: 'init',
       error: null,
@@ -39,7 +39,7 @@ const init = () => {
       resources,
     })
     .then(() => {
-      yup.setLocale(resources.locales);
+      yup.setLocale(resources.yupLocales);
 
       const elements = {
         form: document.querySelector('.rss-form'),
@@ -52,7 +52,8 @@ const init = () => {
 
       const watchedState = watcher(state, i18nextInstance, elements);
 
-      setTimeout(() => updatePosts(watchedState), 5000);
+      const updateDelay = 5000;
+      setTimeout(() => updatePosts(watchedState, updateDelay), updateDelay);
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -73,7 +74,7 @@ const init = () => {
       elements.postsWrapper.addEventListener('click', (e) => {
         if (e.target.hasAttribute('data-id')) {
           const postId = e.target.dataset.id;
-          watchedState.postIdForModal = postId;
+          watchedState.modalPostId = postId;
           watchedState.uiState.openedPostsIds.add(postId);
         }
       });
