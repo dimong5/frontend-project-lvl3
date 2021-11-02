@@ -10,12 +10,13 @@ const updatePosts = (state, updateDelay) => {
       const parsedData = parseRSS(response.data.contents);
       const posts = parsedData.items
         .map((item) => ({ ...item, id: uniqueId(), feedLink: feed.link }));
-      const diff = differenceBy(posts, state.data.posts, 'title');
+      const postsSelectedByFeed = state.data.posts.filter(({ feedLink }) => feedLink === feed.link);
+      const diff = differenceBy(posts, postsSelectedByFeed, 'title');
       state.data.posts = diff.concat(state.data.posts);
     })
     .catch(() => null));
   return Promise.all(requests)
-    .then(() => setTimeout(updatePosts, updateDelay, state));
+    .then(() => setTimeout(updatePosts, updateDelay, state, updateDelay));
 };
 
 export default updatePosts;
