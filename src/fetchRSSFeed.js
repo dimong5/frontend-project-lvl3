@@ -3,6 +3,16 @@ import uniqueId from 'lodash/uniqueId';
 import parseRSS from './parseRSS';
 import addProxyToURL from './addProxyToURL';
 
+const handleErrorType = (err) => {
+  if (err.isAxiosError) {
+    return 'networkError';
+  }
+  if (err.isParserError) {
+    return 'parserError';
+  }
+  return 'unknownError';
+};
+
 export default (url, state) => {
   state.network.state = 'loading';
   return axios
@@ -18,15 +28,7 @@ export default (url, state) => {
       state.network.state = 'success';
     })
     .catch((error) => {
-      console.log(error.isAxiosError, error);
-      if (error.isAxiosError) {
-        state.network.error = 'networkError';
-      }
-      if (error.isParserError) {
-        state.network.error = 'parserError';
-      } else {
-        state.network.error = 'unknownError';
-      }
+      state.network.error = handleErrorType(error);
       state.network.state = 'failure';
     });
 };
