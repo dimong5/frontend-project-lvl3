@@ -1,8 +1,11 @@
 export default (xmlString) => {
   const parser = new DOMParser();
   const xmlTree = parser.parseFromString(xmlString, 'application/xml');
-  if (xmlTree.querySelector('parsererror')) {
-    throw new Error('Parser Error');
+  const parserError = xmlTree.querySelector('parsererror');
+  if (parserError) {
+    const error = new Error(parserError.textContent);
+    error.isParserError = true;
+    throw error;
   }
   const itemsDOM = [...xmlTree.querySelectorAll('item')];
   const title = xmlTree.querySelector('channel > title').textContent;

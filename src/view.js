@@ -1,7 +1,7 @@
 import find from 'lodash/find';
 import onChange from 'on-change';
 
-const sanitizeHTML = (str) => str.replace(/[^\w. ]/gi, (c) => `&#${c.charCodeAt(0)};`);
+const sanitizeHTML = (str) => str.replace(/</g, '&lt;');
 
 export default (appState, i18next, elements) => {
   const {

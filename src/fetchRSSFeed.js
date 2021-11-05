@@ -18,10 +18,14 @@ export default (url, state) => {
       state.network.state = 'success';
     })
     .catch((error) => {
-      switch (error.message) {
-        case 'Parser Error': state.network.error = 'parserError'; break;
-        case 'Network Error': state.network.error = 'networkError'; break;
-        default: state.network.error = 'unknownError';
+      console.log(error.isAxiosError, error);
+      if (error.isAxiosError) {
+        state.network.error = 'networkError';
+      }
+      if (error.isParserError) {
+        state.network.error = 'parserError';
+      } else {
+        state.network.error = 'unknownError';
       }
       state.network.state = 'failure';
     });
