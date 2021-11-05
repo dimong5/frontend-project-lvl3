@@ -3,7 +3,7 @@ import uniqueId from 'lodash/uniqueId';
 import parseRSS from './parseRSS';
 import addProxyToURL from './addProxyToURL';
 
-const handleErrorType = (err) => {
+const getErrorType = (err) => {
   if (err.isAxiosError) {
     return 'networkError';
   }
@@ -28,7 +28,7 @@ export default (url, state) => {
       state.network.state = 'success';
     })
     .catch((error) => {
-      state.network.error = handleErrorType(error);
+      state.network.error = getErrorType(error);
       state.network.state = 'failure';
     });
 };
